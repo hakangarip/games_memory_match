@@ -1,0 +1,6 @@
+﻿How to run the game locally
+
+1. Install a local web server like xampp and unzip the game.zip file copy the unzipped files into the following path
+2. (if xampp is installed in c drive of your computer path will be - C:\xampp\htdocs)
+3. create a folder inside it and copy the contents of game.zip into the newly created folder
+4. open chrome and type localhost/{newly created folder name}/

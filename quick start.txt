@@ -1,0 +1,8 @@
+There are three zip files in this folder
+
+documentaion.zip - contains the clear details about the game
+
+game.zip - contains the optimised game files  ( not source)
+
+source.zip - contains the source files for the game including assets , js ,json and html files
+
