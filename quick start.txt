@@ -6,3 +6,19 @@ game.zip - contains the optimised game files  ( not source)
 
 source.zip - contains the source files for the game including assets , js ,json and html files
 
+
+Nasıl çalıştırırsın
+
+Prod derle ve Android’e senkronla:
+cd D:\siteler\wwwroot\games\memory_match\source
+
+npm run build:android
+
+Android Studio’da aç:
+npm run cap:open:android
+
+Yalnız web build:
+npm run build
+
+
+ $env:JAVA_HOME="C:\Program Files\Android\Android Studio\jbr"; cd d:\siteler\wwwroot\games\memory_match\source\android; .\gradlew.bat assembleDebug

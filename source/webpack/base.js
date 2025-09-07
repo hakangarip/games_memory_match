@@ -2,6 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: "development",
@@ -37,6 +38,14 @@ module.exports = {
     new CleanWebpackPlugin({
       root: path.resolve(__dirname, "../")
     }),
+    // Copy static assets needed at runtime (Phaser loads via relative URLs)
+    new CopyWebpackPlugin([
+      { from: path.resolve(__dirname, "../assets"), to: "assets" },
+      { from: path.resolve(__dirname, "../sounds"), to: "sounds" },
+      { from: path.resolve(__dirname, "../fonts"), to: "fonts" },
+      { from: path.resolve(__dirname, "../logo.gif"), to: "logo.gif" },
+      { from: path.resolve(__dirname, "../favicon.ico"), to: "favicon.ico" }
+    ]),
     new webpack.DefinePlugin({
       CANVAS_RENDERER: JSON.stringify(true),
       WEBGL_RENDERER: JSON.stringify(true)

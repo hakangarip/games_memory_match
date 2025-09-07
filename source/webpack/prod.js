@@ -6,7 +6,9 @@ const TerserPlugin = require("terser-webpack-plugin");
 module.exports = merge(base, {
   mode: "production",
   output: {
-    filename: "bundle.min.js"
+  filename: "bundle.min.js",
+  // Emit build artifacts into a local www directory for Capacitor
+  path: path.resolve(__dirname, "../www")
   },
   devtool: false,
   performance: {
