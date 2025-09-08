@@ -123,6 +123,7 @@ export class Intro extends Phaser.GameObjects.Container {
         });
     }
 
+
         this.soundBtn.on("pointerdown", () => {
             this.controlSound(this.soundBtn);
         });
@@ -134,7 +135,38 @@ export class Intro extends Phaser.GameObjects.Container {
         this.logo.alpha = 0;
 
     this.visible = false;
+        this.firstShowDone = false; // ilk animasyon oynatıldı mı
         this.show();
+    }
+
+    // Ayarlar ekranından geri dönerken güvenli şekilde butonları geri yüklemek için
+    forceReturnShow() {
+        this.firstShowDone = true;
+        this.visible = true;
+        this.alpha = 1;
+        [this.logo, this.playBtn, this.menuBtn, this.soundBtn, this.fullAccessBtn].forEach(el=>{ if(el){ el.alpha = 1; }});
+        if (!this.playBtnTween || (this.playBtnTween.playState !== 0 && this.playBtnTween.playState !== 1)) {
+            this.playBtn.scaleX = this.playBtn.scaleY = 1;
+            this.playBtnTween = this.scene.tweens.add({
+                targets: this.playBtn,
+                scale: { from: 1, to: 1 - .1 },
+                ease: 'Linear',
+                yoyo: true,
+                repeat: -1,
+                duration: 700,
+            });
+        }
+        this.enable();
+        [this.playBtn, this.menuBtn, this.soundBtn, this.fullAccessBtn].forEach(b=>{
+            if (!b) return;
+            if (!b.input) b.setInteractive(); else b.input.enabled = true;
+        });
+        try {
+            if (this.scene.introgrp && !this.scene.introgrp.list.includes(this)) {
+                this.scene.introgrp.add(this);
+            }
+            if (this.scene.gameGroup) this.scene.gameGroup.bringToTop(this.scene.introgrp);
+        } catch(e) {}
     }
 
     update() {
@@ -240,6 +272,42 @@ export class Intro extends Phaser.GameObjects.Container {
 
     show() {
         if (this.visible) return;
+
+        // Eğer ilk giriş animasyonu daha önce oynatıldıysa hızlı göster (animasyonsuz)
+        if (this.firstShowDone) {
+            this.visible = true;
+            this.alpha = 1;
+            this.logo.alpha = 1;
+            this.playBtn.alpha = 1;
+            this.menuBtn.alpha = 1;
+            this.soundBtn.alpha = 1;
+            if (this.fullAccessBtn) this.fullAccessBtn.alpha = 1;
+            // Nabız tween'i yoksa ekle, varsa dokunma
+    if (!this.playBtnTween || (this.playBtnTween.playState !== 0 && this.playBtnTween.playState !== 1)) {
+                this.playBtn.scaleX = this.playBtn.scaleY = 1;
+                this.playBtnTween = this.scene.tweens.add({
+                    targets: this.playBtn,
+                    scale: { from: 1, to: 1 - .1 },
+                    ease: 'Linear',
+                    yoyo: true,
+                    repeat: -1,
+                    duration: 700,
+                });
+            }
+            // Her durumda etkileşimi yeniden aç
+            // Her ihtimale karşı inputları yeniden aç ve hit area'ları tazele
+            this.enable();
+            [this.playBtn, this.menuBtn, this.soundBtn].forEach(b=>{
+                if (b && !b.input) b.setInteractive();
+                else if (b && b.input && !b.input.enabled) b.input.enabled = true;
+            });
+            if (this.fullAccessBtn) {
+                if (!this.fullAccessBtn.input) this.fullAccessBtn.setInteractive();
+                else this.fullAccessBtn.input.enabled = true;
+            }
+            return;
+        }
+
         this.visible = true;
 
         // Ensure sound icon matches current mute state at show time
@@ -336,6 +404,7 @@ export class Intro extends Phaser.GameObjects.Container {
                         ease: "Power2",
                     })
                 }
+                this.firstShowDone = true;
             }
         })
     }

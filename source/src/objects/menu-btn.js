@@ -158,14 +158,31 @@ export class MenuBtn extends Phaser.GameObjects.Container {
         this.shuffleBtnTick.visible = savedCardShuffle;
         this.scene.gamePlay.cardShuffle = savedCardShuffle;
 
-        this.playBtn = this.scene.add.sprite(0, 380, "sheet", "playBtn");
+        // Geri (ana ekrana dön) butonu - eski oyunu başlat butonu yerine
+        this.playBtn = this.scene.add.sprite(0, 380, "back_button");
         this.playBtn.setOrigin(.5)
-        this.playBtn.setScale(.8)
+        this.playBtn.setScale(.7)
         this.add(this.playBtn);
 
-
         this.playBtn.on("pointerdown", () => {
-            this.showGamePlay(this.playBtn);
+            this.scene.sound.add('click1').play();
+            this.disable();
+            this.scene.tweens.add({
+                targets: this,
+                alpha: { from: 1, to: 0 },
+                duration: 200,
+                ease: 'Power0',
+                onComplete: () => {
+                    this.visible = false;
+                    this.alpha = 1;
+                    if (this.scene.gameGroup && this.scene.introgrp) {
+                        try { this.scene.gameGroup.bringToTop(this.scene.introgrp); } catch(e) {}
+                    }
+                    if (this.scene.intro) {
+                        if (this.scene.intro.forceReturnShow) this.scene.intro.forceReturnShow(); else this.scene.intro.show();
+                    }
+                }
+            });
         });
 
         this.previewBtn.on("pointerdown", () => {
@@ -187,9 +204,10 @@ export class MenuBtn extends Phaser.GameObjects.Container {
         for (let i = 0; i < this.colArr.length; i++) {
             this.colArr[i].setInteractive();
         }
-        this.playBtn.setInteractive();
+    this.playBtn.setInteractive();
         this.previewBtn.setInteractive();
         this.shuffleBtn.setInteractive();
+    // Diğer ayar kontrolleri eklendiyse burada açılabilir
 
     }
 
@@ -298,7 +316,7 @@ export class MenuBtn extends Phaser.GameObjects.Container {
         for (let i = 0; i < this.colArr.length; i++) {
             this.colArr[i].disableInteractive();
         }
-        this.playBtn.disableInteractive();
+    this.playBtn.disableInteractive();
         this.previewBtn.disableInteractive();
         this.shuffleBtn.disableInteractive();
 
@@ -320,15 +338,7 @@ export class MenuBtn extends Phaser.GameObjects.Container {
         })
     }
 
-    showGamePlay() {
-        this.scene.sound.add('click1').play();
-        this.disable();
-        this.hide();
-        setTimeout(() => {
-            this.scene.gamePlay.show();
-            this.scene.topPanel.show();
-        }, 210)
-    }
+    showGamePlay() { /* Artık kullanılmıyor - geriye dönüş playBtn onClick içinde handle ediliyor */ }
 
     onTap(sprite) {
         this.scene.sound.add('click1').play();
