@@ -26,11 +26,16 @@ export class Intro extends Phaser.GameObjects.Container {
         this.menuBtn.setOrigin(.5)
         this.add(this.menuBtn);
 
-        // New: Full Access button between sound and settings
-    this.fullAccessBtn = this.scene.add.sprite(0, 300, 'free_btn');
-    this.fullAccessBtn.setOrigin(.45)
-    this.fullAccessBtn.setScale(0.85)
-    this.add(this.fullAccessBtn);
+        // Full access butonu: sadece oturumda daha önce açılmadıysa oluştur
+        const sessionUnlocked = sessionStorage.getItem('mm_full_access_session') === '1';
+        if (!sessionUnlocked) {
+            this.fullAccessBtn = this.scene.add.sprite(0, 300, 'free_btn');
+            this.fullAccessBtn.setOrigin(.45)
+            this.fullAccessBtn.setScale(0.85)
+            this.add(this.fullAccessBtn);
+        } else {
+            this.fullAccessBtn = null;
+        }
 
     this.soundBtn = this.scene.add.sprite(100, 290, "sheet", "sound_on");
         this.soundBtn.setOrigin(.75)
@@ -61,8 +66,9 @@ export class Intro extends Phaser.GameObjects.Container {
             this.onTap(this.menuBtn);
         });
 
-        this.fullAccessBtn.setInteractive();
-        this.fullAccessBtn.on("pointerdown", () => {
+    if (this.fullAccessBtn) {
+    this.fullAccessBtn.setInteractive();
+    this.fullAccessBtn.on("pointerdown", () => {
             this.scene.sound.add('click1').play();
             // Grant full access immediately
             try {
@@ -109,11 +115,13 @@ export class Intro extends Phaser.GameObjects.Container {
                         duration: 300,
                         onComplete: () => {
                             this.fullAccessBtn.destroy();
+                this.fullAccessBtn = null;
                         }
                     });
                 }
             });
         });
+    }
 
         this.soundBtn.on("pointerdown", () => {
             this.controlSound(this.soundBtn);
@@ -121,7 +129,7 @@ export class Intro extends Phaser.GameObjects.Container {
 
     this.playBtn.alpha = 0;
     this.menuBtn.alpha = 0;
-    this.fullAccessBtn.alpha = 0;
+    if (this.fullAccessBtn) this.fullAccessBtn.alpha = 0;
     this.soundBtn.alpha = 0;
         this.logo.alpha = 0;
 
@@ -320,12 +328,14 @@ export class Intro extends Phaser.GameObjects.Container {
                     ease: "Power2",
                 })
 
-                this.scene.tweens.add({
-                    targets: this.fullAccessBtn,
-                    alpha: { from: 0, to: 1 },
-                    duration: 300,
-                    ease: "Power2",
-                })
+                if (this.fullAccessBtn) {
+                    this.scene.tweens.add({
+                        targets: this.fullAccessBtn,
+                        alpha: { from: 0, to: 1 },
+                        duration: 300,
+                        ease: "Power2",
+                    })
+                }
             }
         })
     }
