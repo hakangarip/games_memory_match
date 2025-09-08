@@ -224,6 +224,22 @@ export class CTA extends Phaser.GameObjects.Container {
             ease: "Power0",
             yoyo:true,
             onComplete: () => {
+                // Increment games played counter
+                try {
+                    const n = parseInt(localStorage.getItem('mm_games_played')||'0')+1;
+                    localStorage.setItem('mm_games_played', String(n));
+                } catch(e) {}
+
+                // If user has no full access and already played one game, enforce 2x2 next session
+                try {
+                    const full = localStorage.getItem('mm_full_access') === '1';
+                    const played = parseInt(localStorage.getItem('mm_games_played')||'0');
+                    if (!full && played >= 1) {
+                        localStorage.setItem('mm_rows','2');
+                        localStorage.setItem('mm_cols','2');
+                    }
+                } catch(e) {}
+
                 this.scene.retry()
                 this.hide()
             }

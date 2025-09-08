@@ -196,8 +196,13 @@ export class MenuBtn extends Phaser.GameObjects.Container {
     show() {
         if (this.visible) return;
 
-        const savedRows = parseInt(localStorage.getItem('mm_rows')) || 4;
-        const savedCols = parseInt(localStorage.getItem('mm_cols')) || 4;
+        const fullAccess = localStorage.getItem('mm_full_access') === '1';
+        let savedRows = parseInt(localStorage.getItem('mm_rows')) || 2;
+        let savedCols = parseInt(localStorage.getItem('mm_cols')) || 2;
+        if (!fullAccess) {
+            savedRows = 2; savedCols = 2;
+            try { localStorage.setItem('mm_rows', '2'); localStorage.setItem('mm_cols', '2'); } catch(e) {}
+        }
 
         // Update row selection UI
         for (let i = 0; i < this.rowArr.length; i++) {
@@ -231,7 +236,7 @@ export class MenuBtn extends Phaser.GameObjects.Container {
             }
         }
 
-        this.visible = true;
+    this.visible = true;
         this.alpha = 0;
         this.scene.tweens.add({
             targets: this,
@@ -328,6 +333,22 @@ export class MenuBtn extends Phaser.GameObjects.Container {
     onTap(sprite) {
         this.scene.sound.add('click1').play();
 
+        const fullAccess = localStorage.getItem('mm_full_access') === '1';
+        const lockedTap = () => {
+            // simple toast text near play button
+            const msg = this.scene.add.text(0, 330, 'Reklam izleyince açılacak (yakında)', {
+                fontFamily: 'ARCO', fontSize: 28, color: '#ffffff'
+            }).setOrigin(0.5);
+            this.add(msg);
+            this.scene.tweens.add({ targets: msg, alpha: { from: 1, to: 0 }, y: msg.y - 20, duration: 1200, onComplete: ()=> msg.destroy() });
+            this.scene.tweens.add({ targets: sprite, angle: { from: 0, to: 10 }, yoyo: true, repeat: 1, duration: 50 });
+        };
+
+        if (!fullAccess && ((sprite.isRow && sprite.num !== 2) || (sprite.isCol && sprite.num !== 2))) {
+            lockedTap();
+            return;
+        }
+
         if (sprite.isRow) {
 
             for (let i = 0; i < sprite.arr.length; i++) {
@@ -353,7 +374,7 @@ export class MenuBtn extends Phaser.GameObjects.Container {
                 this.colDarkHide();
             }
 
-        } else if (sprite.isCol) {
+    } else if (sprite.isCol) {
             for (let i = 0; i < sprite.arr.length; i++) {
                 sprite.arr[i].setFrame("frame_1");
                 sprite.arr[i].setScale(.8);

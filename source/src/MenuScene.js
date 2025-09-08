@@ -36,6 +36,11 @@ export default class MenuScene extends Phaser.Scene {
             if (savedMuted !== null) {
                 this.sound.mute = savedMuted === '1';
             }
+            // Initialize gameplay defaults
+            if (!localStorage.getItem('mm_rows')) localStorage.setItem('mm_rows', '2');
+            if (!localStorage.getItem('mm_cols')) localStorage.setItem('mm_cols', '2');
+            if (!localStorage.getItem('mm_full_access')) localStorage.setItem('mm_full_access', '0');
+            if (!localStorage.getItem('mm_games_played')) localStorage.setItem('mm_games_played', '0');
         } catch (e) {
             // ignore storage errors
         }
@@ -94,7 +99,7 @@ export default class MenuScene extends Phaser.Scene {
     this.ctaGrp = this.add.container();
         this.gameGroup.add(this.ctaGrp)
 
-        this.cta = new CTA(this, 0, 0, this);
+    this.cta = new CTA(this, 0, 0, this);
         this.ctaGrp.add(this.cta);
 
         this.setPositions();
@@ -131,8 +136,8 @@ export default class MenuScene extends Phaser.Scene {
         this.menuBtn = new MenuBtn(this, 0, 0, this, this.gamedata);
         this.menuGrp.add(this.menuBtn);
 
-        if (this.cta) this.cta.destroy();
-        this.cta = new CTA(this, 0, 0, this);
+    if (this.cta) this.cta.destroy();
+    this.cta = new CTA(this, 0, 0, this);
         this.ctaGrp.add(this.cta);
 
         // this.gamePlay.stopHint()

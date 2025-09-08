@@ -16,8 +16,20 @@ export class GamePlay extends Phaser.GameObjects.Container {
         this.cardShuffle = false;
 
         this.tiles = [];
-        this.rows = parseInt(localStorage.getItem('mm_rows')) || 4;
-        this.cols = parseInt(localStorage.getItem('mm_cols')) || 4;
+        // Default board is 2x2 unless user unlocks full access
+        let savedRows = parseInt(localStorage.getItem('mm_rows')) || 2;
+        let savedCols = parseInt(localStorage.getItem('mm_cols')) || 2;
+        const fullAccess = localStorage.getItem('mm_full_access') === '1';
+        if (!fullAccess) {
+            savedRows = 2;
+            savedCols = 2;
+            try {
+                localStorage.setItem('mm_rows', '2');
+                localStorage.setItem('mm_cols', '2');
+            } catch(e) { /* noop */ }
+        }
+        this.rows = savedRows;
+        this.cols = savedCols;
         this.clickedArr = [];
 
         this.blocksGroup = this.scene.add.container(0, 0);

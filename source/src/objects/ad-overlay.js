@@ -39,12 +39,7 @@ export class AdOverlay extends Phaser.GameObjects.Container {
         this.visible = false;
     }
 
-    showOnce() {
-        if (!sessionStorage.getItem('adShown')) {
-            this.show();
-            sessionStorage.setItem('adShown', 'true');
-        }
-    }
+    // Disabled auto-show logic for startup ads per requirement
 
     show() {
         this.visible = true;
