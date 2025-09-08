@@ -17,6 +17,6 @@ export default {
         autoCenter: Phaser.Scale.CENTER_BOTH,
 
     },
-    title: 'Mispha Interactives',
+    title: 'Hakan Garip Memory Match',
     scene: [BootScene, MenuScene, PlayScene, EndScene],
 };

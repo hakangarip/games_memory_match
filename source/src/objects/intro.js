@@ -84,9 +84,9 @@ export class Intro extends Phaser.GameObjects.Container {
                 yoyo: true,
                 onComplete: () => {
                     // Toast mesaj
-                    const toast = this.scene.add.text(0, 180, 'Tüm modlar açıldı!', {
+                    const toast = this.scene.add.text(0, 180, 'All modes are unlocked!', {
                         fontFamily: 'ARCO',
-                        fontSize: 42,
+                        fontSize: 30,
                         align: 'center',
                         color: '#ffffff'
                     }).setOrigin(0.5);
@@ -405,6 +405,41 @@ export class Intro extends Phaser.GameObjects.Container {
                     })
                 }
                 this.firstShowDone = true;
+
+                // İlk açılışta (oturumda bir kez) reklam izleme hatırlatması popup'ı göster
+                const alreadyUnlocked = sessionStorage.getItem('mm_full_access_session') === '1' || localStorage.getItem('mm_full_access') === '1';
+                if (!alreadyUnlocked && !sessionStorage.getItem('mm_unlock_hint_shown')) {
+                    try { sessionStorage.setItem('mm_unlock_hint_shown','1'); } catch(e) {}
+                    const hintContainer = this.scene.add.container(0, -20);
+                    this.add(hintContainer);
+                    const g = this.scene.add.graphics();
+                    g.fillStyle(0x000000, 0.72);
+                    g.fillRoundedRect(-340, -60, 680, 120, 28);
+                    hintContainer.add(g);
+                    const msg = this.scene.add.text(0, 0, 'Watch a short ad to \n unlock the game.', {
+                        fontFamily: 'ARCO',
+                        fontSize: 30,
+                        align: 'center',
+                        color: '#ffffff'
+                    }).setOrigin(0.5);
+                    hintContainer.add(msg);
+                    hintContainer.alpha = 0;
+                    this.scene.tweens.add({
+                        targets: hintContainer,
+                        alpha: { from: 0, to: 1 },
+                        duration: 250,
+                        ease: 'Power2',
+                        onComplete: () => {
+                            this.scene.tweens.add({
+                                targets: hintContainer,
+                                alpha: { from: 1, to: 0 },
+                                delay: 2000,
+                                duration: 400,
+                                onComplete: () => hintContainer.destroy()
+                            });
+                        }
+                    });
+                }
             }
         })
     }
