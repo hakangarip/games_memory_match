@@ -19,7 +19,7 @@ export class GamePlay extends Phaser.GameObjects.Container {
         // Default board is 2x2 unless user unlocks full access
         let savedRows = parseInt(localStorage.getItem('mm_rows')) || 2;
         let savedCols = parseInt(localStorage.getItem('mm_cols')) || 2;
-        const fullAccess = localStorage.getItem('mm_full_access') === '1';
+    const fullAccess = (localStorage.getItem('mm_full_access') === '1') || (sessionStorage.getItem('mm_full_access_session') === '1');
         if (!fullAccess) {
             savedRows = 2;
             savedCols = 2;

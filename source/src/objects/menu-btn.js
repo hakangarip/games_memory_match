@@ -196,7 +196,7 @@ export class MenuBtn extends Phaser.GameObjects.Container {
     show() {
         if (this.visible) return;
 
-        const fullAccess = localStorage.getItem('mm_full_access') === '1';
+    const fullAccess = (localStorage.getItem('mm_full_access') === '1') || (sessionStorage.getItem('mm_full_access_session') === '1');
         let savedRows = parseInt(localStorage.getItem('mm_rows')) || 2;
         let savedCols = parseInt(localStorage.getItem('mm_cols')) || 2;
         if (!fullAccess) {
@@ -333,19 +333,12 @@ export class MenuBtn extends Phaser.GameObjects.Container {
     onTap(sprite) {
         this.scene.sound.add('click1').play();
 
-        const fullAccess = localStorage.getItem('mm_full_access') === '1';
-        const lockedTap = () => {
-            // simple toast text near play button
-            const msg = this.scene.add.text(0, 330, 'Reklam izleyince açılacak (yakında)', {
-                fontFamily: 'ARCO', fontSize: 28, color: '#ffffff'
-            }).setOrigin(0.5);
-            this.add(msg);
-            this.scene.tweens.add({ targets: msg, alpha: { from: 1, to: 0 }, y: msg.y - 20, duration: 1200, onComplete: ()=> msg.destroy() });
-            this.scene.tweens.add({ targets: sprite, angle: { from: 0, to: 10 }, yoyo: true, repeat: 1, duration: 50 });
-        };
-
+        let fullAccess = (localStorage.getItem('mm_full_access') === '1') || (sessionStorage.getItem('mm_full_access_session') === '1');
         if (!fullAccess && ((sprite.isRow && sprite.num !== 2) || (sprite.isCol && sprite.num !== 2))) {
-            lockedTap();
+            const msg = this.scene.add.text(0, 330, "Kilidi açmak için 'Tüm Oyunu Aç' bas", { fontFamily:'ARCO', fontSize:26, color:'#ffffff' }).setOrigin(0.5);
+            this.add(msg);
+            this.scene.tweens.add({ targets: msg, alpha:{from:1,to:0}, y: msg.y - 15, duration: 1300, onComplete: ()=> msg.destroy() });
+            this.scene.tweens.add({ targets: sprite, angle:{from:0,to:10}, yoyo:true, repeat:1, duration:60 });
             return;
         }
 

@@ -74,7 +74,8 @@ export class Intro extends Phaser.GameObjects.Container {
             this.scene.sound.add('click1').play();
             // Grant full access immediately
             try {
-                localStorage.setItem('mm_full_access', '1');
+                sessionStorage.setItem('mm_full_access_session', '1');
+                // İleride reklam ile kalıcı açılacak; şimdilik sadece oturumluk.
             } catch(e) {}
             // Visual feedback
             this.scene.tweens.add({
@@ -83,6 +84,43 @@ export class Intro extends Phaser.GameObjects.Container {
                 ease: "Linear",
                 duration: 100,
                 yoyo: true,
+                onComplete: () => {
+                    // Toast mesaj
+                    const toast = this.scene.add.text(0, 180, 'Tüm modlar açıldı!', {
+                        fontFamily: 'ARCO',
+                        fontSize: 42,
+                        align: 'center',
+                        color: '#ffffff'
+                    }).setOrigin(0.5);
+                    this.add(toast);
+                    toast.alpha = 0;
+                    this.scene.tweens.add({
+                        targets: toast,
+                        alpha: { from: 0, to: 1 },
+                        y: { from: toast.y + 20, to: toast.y },
+                        duration: 250,
+                        ease: 'Power2',
+                        onComplete: () => {
+                            this.scene.tweens.add({
+                                targets: toast,
+                                alpha: { from: 1, to: 0 },
+                                delay: 1200,
+                                duration: 400,
+                                onComplete: () => toast.destroy()
+                            });
+                        }
+                    });
+                    // Butonu ekrandan kaldır
+                    this.scene.tweens.add({
+                        targets: [this.fullAccessBtn, this.fullAccessTxt],
+                        alpha: { from: 1, to: 0 },
+                        duration: 300,
+                        onComplete: () => {
+                            this.fullAccessBtn.destroy();
+                            this.fullAccessTxt.destroy();
+                        }
+                    });
+                }
             });
         });
 

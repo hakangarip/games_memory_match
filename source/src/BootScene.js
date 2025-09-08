@@ -34,6 +34,19 @@ export default class BootScene extends Phaser.Scene {
             // ignore storage errors
         }
 
+        // Gameplay state reset (her açılışta sıfırla): kalıcı full access ve grid seçimlerini temizle
+        try {
+            const resetKeys = ['mm_full_access','mm_rows','mm_cols','mm_games_played','mm_card_shown','mm_card_shuffle'];
+            resetKeys.forEach(k=> localStorage.removeItem(k));
+            // Session flags
+            try { sessionStorage.removeItem('mm_full_access_session'); } catch(e) {}
+            // Zorunlu başlangıç değerleri
+            localStorage.setItem('mm_rows','2');
+            localStorage.setItem('mm_cols','2');
+            localStorage.setItem('mm_full_access','0');
+            localStorage.setItem('mm_games_played','0');
+        } catch(e) { /* noop */ }
+
     this.load.image('bg', 'img/bg.png');
     this.load.image('cloud', 'img/cloud.png');
     this.load.image('back_button', 'img/restore.png');
