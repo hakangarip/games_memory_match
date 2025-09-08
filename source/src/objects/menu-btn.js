@@ -149,6 +149,15 @@ export class MenuBtn extends Phaser.GameObjects.Container {
         this.shuffleBtnTick.visible = false;
         this.previewBtnTick.visible = false;
 
+        const savedCardShown = localStorage.getItem('mm_card_shown') === '1';
+        const savedCardShuffle = localStorage.getItem('mm_card_shuffle') === '1';
+
+        this.previewBtnTick.visible = savedCardShown;
+        this.scene.gamePlay.cardShown = savedCardShown;
+
+        this.shuffleBtnTick.visible = savedCardShuffle;
+        this.scene.gamePlay.cardShuffle = savedCardShuffle;
+
         this.playBtn = this.scene.add.sprite(0, 380, "sheet", "playBtn");
         this.playBtn.setOrigin(.5)
         this.playBtn.setScale(.8)
@@ -186,6 +195,42 @@ export class MenuBtn extends Phaser.GameObjects.Container {
 
     show() {
         if (this.visible) return;
+
+        const savedRows = parseInt(localStorage.getItem('mm_rows')) || 4;
+        const savedCols = parseInt(localStorage.getItem('mm_cols')) || 4;
+
+        // Update row selection UI
+        for (let i = 0; i < this.rowArr.length; i++) {
+            const frame = this.rowArr[i];
+            if (frame.num === savedRows) {
+                frame.setFrame("green");
+                frame.setScale(.85);
+                frame.text.setColor("#5f8202");
+                frame.text.setScale(1.1);
+            } else {
+                frame.setFrame("frame_1");
+                frame.setScale(.8);
+                frame.text.setColor("#ffffff");
+                frame.text.setScale(1);
+            }
+        }
+
+        // Update col selection UI
+        for (let i = 0; i < this.colArr.length; i++) {
+            const frame = this.colArr[i];
+            if (frame.num === savedCols) {
+                frame.setFrame("green");
+                frame.setScale(.85);
+                frame.text.setColor("#5f8202");
+                frame.text.setScale(1.1);
+            } else {
+                frame.setFrame("frame_1");
+                frame.setScale(.8);
+                frame.text.setColor("#ffffff");
+                frame.text.setScale(1);
+            }
+        }
+
         this.visible = true;
         this.alpha = 0;
         this.scene.tweens.add({
@@ -221,17 +266,21 @@ export class MenuBtn extends Phaser.GameObjects.Container {
             if (!this.previewBtnTick.visible) {
                 this.previewBtnTick.visible = true;
                 this.scene.gamePlay.cardShown = true;
+                localStorage.setItem('mm_card_shown', '1');
             } else {
                 this.scene.gamePlay.cardShown = false;
                 this.previewBtnTick.visible = false;
+                localStorage.setItem('mm_card_shown', '0');
             }
         } else if (sprite == this.shuffleBtn) {
             if (!this.shuffleBtnTick.visible) {
                 this.shuffleBtnTick.visible = true;
                 this.scene.gamePlay.cardShuffle = true;
+                localStorage.setItem('mm_card_shuffle', '1');
             } else {
                 this.shuffleBtnTick.visible = false;
                 this.scene.gamePlay.cardShuffle = false;
+                localStorage.setItem('mm_card_shuffle', '0');
             }
         }
     }
@@ -296,6 +345,7 @@ export class MenuBtn extends Phaser.GameObjects.Container {
             sprite.setScale(.85);
 
             this.scene.gamePlay.rows = sprite.num;
+            localStorage.setItem('mm_rows', sprite.num);
 
             if (sprite.num % 2 != 0) {
                 this.colDark();
@@ -318,6 +368,7 @@ export class MenuBtn extends Phaser.GameObjects.Container {
             sprite.setScale(.85);
 
             this.scene.gamePlay.cols = sprite.num;
+            localStorage.setItem('mm_cols', sprite.num);
 
             if (sprite.num % 2 != 0) {
                 this.rowDark();

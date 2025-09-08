@@ -16,8 +16,8 @@ export class GamePlay extends Phaser.GameObjects.Container {
         this.cardShuffle = false;
 
         this.tiles = [];
-        this.rows = 4;
-        this.cols = 4;
+        this.rows = parseInt(localStorage.getItem('mm_rows')) || 4;
+        this.cols = parseInt(localStorage.getItem('mm_cols')) || 4;
         this.clickedArr = [];
 
         this.blocksGroup = this.scene.add.container(0, 0);

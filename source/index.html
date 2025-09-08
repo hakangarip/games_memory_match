@@ -20,7 +20,13 @@
     height: 100vh;
     z-index: 1;
     overflow: visible;
-    background: #fff url('logo.gif') no-repeat center center;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+  font-size: 32px;
+  color: #222;
         }
 
   /* Startup Ad Overlay */
@@ -34,7 +40,7 @@
     <meta charset="utf-8">
   </head>
   <body>
-        <div id="loader"></div>
+  <div id="loader">Loading...</div>
         <!-- Startup Ad Overlay (shows once per session) -->
         <div id="ad-overlay">
           <div id="ad-box">

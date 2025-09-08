@@ -5,7 +5,7 @@ import config from '../config';
 import { TopPanel } from './objects/top-panel';
 import { MenuBtn } from './objects/menu-btn';
 import { Intro } from './objects/intro';
-import { AdOverlay } from './objects/ad-overlay';
+
 
 let gamedata = {}
 gamedata.gameWidth = 960;
@@ -101,10 +101,7 @@ export default class MenuScene extends Phaser.Scene {
 
         this.gameGroup.bringToTop(this.cta)
 
-    // Show startup ad once per session
-    // this.adLayer = new AdOverlay(this, gamedata.gameWidth / 2, gamedata.gameHeight / 2);
-    // this.gameGroup.add(this.adLayer);
-    // this.adLayer.showOnce();
+
     }
 
     update() {

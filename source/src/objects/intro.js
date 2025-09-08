@@ -15,20 +15,8 @@ export class Intro extends Phaser.GameObjects.Container {
         this.logo.setOrigin(0.5);
         this.add(this.logo);
 
-        this.logoArr = [];
-        let xpos = [65, 176, 10, 121];
-        let ypos = [-132, -119, -129, -129];
-        let path = ["i", "s", "k", "d"];
-        let correctArr = [2, 0, 3, 1]
-        for (let i = 0; i < 4; i++) {
-            let kidsTxt = this.scene.add.sprite(xpos[i], this.logo.y + ypos[i] + 10, "sheet", "logo_" + path[i]);
-            kidsTxt.setOrigin(0.5);
-            this.add(kidsTxt);
-            this.logoArr.push(kidsTxt);
-
-            kidsTxt.index = correctArr[i];
-            kidsTxt.alpha = 0;
-        }
+    // Removed letter logo sprites (logo_d, logo_i, logo_k, logo_s) from start screen
+    this.logoArr = [];
 
         this.playBtn = this.scene.add.sprite(0, 70, "sheet", "playBtn");
         this.playBtn.setOrigin(.5)
@@ -212,29 +200,7 @@ export class Intro extends Phaser.GameObjects.Container {
             duration: 300,
             ease: "Back.Out",
             onComplete: () => {
-                for (let i = 0; i < this.logoArr.length; i++) {
-                    this.scene.time.addEvent({
-                        delay: i * 100,
-                        callback: () => {
-                            this.scene.tweens.add({
-                                targets: this.logoArr[this.logoArr[i].index],
-                                alpha: { from: 0, to: 1 },
-                                y: { from: this.logoArr[this.logoArr[i].index].y - 50, to: this.logoArr[this.logoArr[i].index].y },
-                                duration: 300,
-                                ease: "Power2",
-                            });
-                            this.scene.tweens.add({
-                                targets: this.logoArr[this.logoArr[i].index],
-                                angle: { from: -10, to: 10 },
-                                yoyo: true,
-                                repeat: -1,
-                                ease: "Power2",
-                                duration: 1300,
-
-                            });
-                        }
-                    })
-                }
+                // Letter logo animations removed
                 this.scene.tweens.add({
                     targets: this.playBtn,
                     y: {

@@ -1,56 +1,56 @@
+import Phaser from 'phaser';
+
 export class AdOverlay extends Phaser.GameObjects.Container {
-  constructor(scene, x = 0, y = 0) {
-    super(scene);
-    this.scene = scene;
-    this.x = x;
-    this.y = y;
-    this.scene.add.existing(this);
-    this.visible = false;
-    this.init();
-  }
+    constructor(scene, x, y) {
+        super(scene, x, y);
+        this.scene = scene;
+        this.scene.add.existing(this);
+        this.setDepth(1000);
 
-  init() {
-    const w = 960, h = 640;
-    // dim background
-    this.back = this.scene.add.rectangle(0, 0, w + 1000, h + 1000, 0x000000, 0.0).setOrigin(0.5);
-    this.add(this.back);
+        this.init();
+    }
 
-    // ad image (placeholder uses logo3.png already in assets)
-    this.image = this.scene.add.image(0, -20, 'ad_image').setOrigin(0.5);
-    // scale to fit
-    const maxW = 700, maxH = 420;
-    const sx = maxW / this.image.width;
-    const sy = maxH / this.image.height;
-    const s = Math.min(1, sx, sy);
-    this.image.setScale(s);
-    this.add(this.image);
+    init() {
+        // semi-transparent background
+        this.bg = this.scene.add.graphics();
+        this.bg.fillStyle(0x000000, 0.7);
+        this.bg.fillRect(0, 0, this.scene.sys.game.config.width, this.scene.sys.game.config.height);
+        this.add(this.bg);
 
-    // close button
-    this.close = this.scene.add.text(0, 220, 'Kapat', {
-      fontFamily: 'ARCO', fontSize: 48, color: '#ffffff'
-    }).setOrigin(0.5);
-    this.add(this.close);
+        // ad image (placeholder uses logo3.png already in assets)
+        this.adImage = this.scene.add.image(0, 0, 'ad_image');
+        this.add(this.adImage);
 
-    this.close.setInteractive({ useHandCursor: true });
-    this.close.on('pointerdown', () => this.hideOnce());
-  }
+        // close button
+        this.closeButton = this.scene.add.text(0, 0, 'X', {
+            fontSize: '32px',
+            color: '#ffffff',
+            backgroundColor: '#ff0000',
+            padding: { left: 10, right: 10, top: 5, bottom: 5 },
+        });
+        this.closeButton.setOrigin(0.5);
+        this.closeButton.setInteractive();
+        this.add(this.closeButton);
 
-  showOnce() {
-    if (this.scene.registry.get('ad_shown')) return; // already shown this session
-    this.scene.registry.set('ad_shown', true);
-    this.alpha = 0;
-    this.visible = true;
-    this.scene.tweens.add({ targets: this, alpha: { from: 0, to: 1 }, duration: 200, ease: 'Power0' });
-  }
+        this.closeButton.on('pointerdown', () => {
+            this.hide();
+        });
 
-  hideOnce() {
-    this.scene.sound.add('click1').play();
-    this.scene.tweens.add({
-      targets: this,
-      alpha: { from: 1, to: 0 },
-      duration: 150,
-      ease: 'Power0',
-      onComplete: () => { this.visible = false; }
-    });
-  }
+        this.visible = false;
+    }
+
+    showOnce() {
+        if (!sessionStorage.getItem('adShown')) {
+            this.show();
+            sessionStorage.setItem('adShown', 'true');
+        }
+    }
+
+    show() {
+        this.visible = true;
+    }
+
+    hide() {
+        this.visible = false;
+    }
 }

@@ -7,11 +7,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 module.exports = {
   mode: "development",
   devServer: {
-    contentBase: [
-      path.resolve(__dirname, '../'),
-      path.resolve(__dirname, '../assets'),
-      path.resolve(__dirname, '../assets/assets/new_png_animals/256px')
-    ],
+    contentBase: path.resolve(__dirname, '../'),
     publicPath: '/'
   },
   devtool: "eval-source-map",
@@ -40,7 +36,7 @@ module.exports = {
     }),
     // Copy static assets needed at runtime (Phaser loads via relative URLs)
     new CopyWebpackPlugin([
-      { from: path.resolve(__dirname, "../assets"), to: "assets" },
+      { from: path.resolve(__dirname, "../img"), to: "img" },
       { from: path.resolve(__dirname, "../sounds"), to: "sounds" },
       { from: path.resolve(__dirname, "../fonts"), to: "fonts" },
       { from: path.resolve(__dirname, "../logo.gif"), to: "logo.gif" },

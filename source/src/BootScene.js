@@ -3,7 +3,7 @@ import Phaser from 'phaser';
 const animalsContext = (() => {
     try {
         // Webpack will bundle these and return URLs
-        return require.context('../assets/assets/new_png_animals/256px', false, /\.png$/);
+        return require.context('../img/new_png_animals/256px', false, /\.png$/);
     } catch (e) {
         return null;
     }
@@ -18,6 +18,12 @@ export default class BootScene extends Phaser.Scene {
         const bg = this.add.rectangle(540/2, 960/2, 400, 30, 0x666666);
         const bar = this.add.rectangle(bg.x, bg.y, bg.width, bg.height, 0x1effff).setScale(0, 1);
 
+        this.add.text(bg.x, bg.y - 50, 'Loading...', {
+            fontFamily: 'Arial',
+            fontSize: '32px',
+            color: '#ffffff'
+        }).setOrigin(0.5);
+
         // Initialize global mute from persisted state before any sounds are created/played
         try {
             const savedMuted = localStorage.getItem('mm_sound_muted');
@@ -28,15 +34,13 @@ export default class BootScene extends Phaser.Scene {
             // ignore storage errors
         }
 
-    this.load.image('bg', 'assets/bg.png');
-    this.load.image('cloud', 'assets/cloud.png');
-    this.load.image('back_button', 'assets/assets/source/restore.png');
-    // Static ad image to show once on startup
-    this.load.image('ad_image', 'assets/logo3.png');
+    this.load.image('bg', 'img/bg.png');
+    this.load.image('cloud', 'img/cloud.png');
+    this.load.image('back_button', 'img/restore.png');
     this.loadFont('ARCO', 'fonts/ARCO.ttf');
         this.loadFont('ARCO for OSX', 'fonts/ARCO for OSX.otf');
 
-        this.load.atlas('sheet', "assets/sheet.png", "assets/sheet.json");
+        this.load.atlas('sheet', "img/sheet.png", "img/sheet.json");
 
         this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
 
@@ -52,9 +56,12 @@ export default class BootScene extends Phaser.Scene {
         this.animalKeys = [];
         if (animalsContext) {
             animalsContext.keys().forEach((file) => {
+                // console.log(file);
                 const base = file.replace('./', '').replace(/\.png$/i, '');
                 // Normalize key: spaces/dashes to underscores, prefix to avoid key clashes
-                const key = `animal_${base.replace(/[^a-z0-9]+/gi, '_').toLowerCase()}`;
+
+                const processedBase = base.replace(/[^a-z0-9]+/gi, '_').toLowerCase();
+                const key = `animal_${processedBase.charAt(0).toUpperCase() + processedBase.slice(1)}`;
                 const url = animalsContext(file);
                 this.load.image(key, url);
                 this.animalKeys.push(key);
