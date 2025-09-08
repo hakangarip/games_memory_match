@@ -4,12 +4,13 @@
   "description": "A Phaser 3 Project Template",
   "main": "src/index.js",
   "scripts": {
-  "build": "set NODE_OPTIONS=--openssl-legacy-provider && webpack --config webpack/prod.js",
-  "start": "set NODE_OPTIONS=--openssl-legacy-provider && webpack-dev-server --config webpack/base.js --open",
-  "cap:sync": "npx cap sync",
-  "cap:add:android": "npx cap add android",
-  "cap:open:android": "npx cap open android",
-  "build:android": "npm run build && npx cap sync android"
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider && webpack --config webpack/prod.js",
+    "start": "set NODE_OPTIONS=--openssl-legacy-provider && webpack-dev-server --config webpack/base.js --open",
+    "cap:sync": "npx cap sync",
+    "cap:add:android": "npx cap add android",
+    "cap:open:android": "npx cap open android",
+    "cap:assets": "npx @capacitor/assets generate --android",
+    "build:android": "npm run build && npm run cap:assets && npx cap sync android"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
     "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.7.1",
     "@capacitor/android": "^7.4.3",
+    "@capacitor/assets": "^3.0.5",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.2",
