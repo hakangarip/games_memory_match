@@ -49,6 +49,7 @@ export default class BootScene extends Phaser.Scene {
 
     this.load.image('bg', 'img/bg.png');
     this.load.image('cloud', 'img/cloud.png');
+    this.load.image('free_btn', 'img/free.png');
     this.load.image('back_button', 'img/restore.png');
     this.loadFont('ARCO', 'fonts/ARCO.ttf');
         this.loadFont('ARCO for OSX', 'fonts/ARCO for OSX.otf');

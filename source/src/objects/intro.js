@@ -27,22 +27,14 @@ export class Intro extends Phaser.GameObjects.Container {
         this.add(this.menuBtn);
 
         // New: Full Access button between sound and settings
-        this.fullAccessBtn = this.scene.add.sprite(0, 250, "sheet", "frame_1");
-        this.fullAccessBtn.setOrigin(.5)
-        this.fullAccessBtn.setScale(0.9)
-        this.add(this.fullAccessBtn);
+    this.fullAccessBtn = this.scene.add.sprite(0, 300, 'free_btn');
+    this.fullAccessBtn.setOrigin(.45)
+    this.fullAccessBtn.setScale(0.85)
+    this.add(this.fullAccessBtn);
 
-        this.fullAccessTxt = this.scene.add.text(0, 246, "Tüm Oyunu Aç", {
-            fontFamily: "ARCO",
-            align: "center",
-            fontSize: 36,
-            fill: "#ffffff"
-        });
-        this.fullAccessTxt.setOrigin(0.5);
-        this.add(this.fullAccessTxt);
+    this.soundBtn = this.scene.add.sprite(100, 290, "sheet", "sound_on");
+        this.soundBtn.setOrigin(.75)
 
-    this.soundBtn = this.scene.add.sprite(200, 250, "sheet", "sound_on");
-        this.soundBtn.setOrigin(.5)
         this.add(this.soundBtn);
 
         this.cloud = this.scene.add.sprite(0, 380, "cloud");
@@ -79,7 +71,7 @@ export class Intro extends Phaser.GameObjects.Container {
             } catch(e) {}
             // Visual feedback
             this.scene.tweens.add({
-                targets: [this.fullAccessBtn, this.fullAccessTxt],
+            targets: [this.fullAccessBtn],
                 scale: { from: this.fullAccessBtn.scale, to: this.fullAccessBtn.scale - 0.1 },
                 ease: "Linear",
                 duration: 100,
@@ -112,12 +104,11 @@ export class Intro extends Phaser.GameObjects.Container {
                     });
                     // Butonu ekrandan kaldır
                     this.scene.tweens.add({
-                        targets: [this.fullAccessBtn, this.fullAccessTxt],
+                targets: [this.fullAccessBtn],
                         alpha: { from: 1, to: 0 },
                         duration: 300,
                         onComplete: () => {
                             this.fullAccessBtn.destroy();
-                            this.fullAccessTxt.destroy();
                         }
                     });
                 }
@@ -131,7 +122,6 @@ export class Intro extends Phaser.GameObjects.Container {
     this.playBtn.alpha = 0;
     this.menuBtn.alpha = 0;
     this.fullAccessBtn.alpha = 0;
-    this.fullAccessTxt.alpha = 0;
     this.soundBtn.alpha = 0;
         this.logo.alpha = 0;
 
@@ -331,11 +321,8 @@ export class Intro extends Phaser.GameObjects.Container {
                 })
 
                 this.scene.tweens.add({
-                    targets: [this.fullAccessBtn, this.fullAccessTxt],
-                    alpha: {
-                        from: 0,
-                        to: 1,
-                    },
+                    targets: this.fullAccessBtn,
+                    alpha: { from: 0, to: 1 },
                     duration: 300,
                     ease: "Power2",
                 })
