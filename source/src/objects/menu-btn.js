@@ -345,7 +345,7 @@ export class MenuBtn extends Phaser.GameObjects.Container {
 
         let fullAccess = (localStorage.getItem('mm_full_access') === '1') || (sessionStorage.getItem('mm_full_access_session') === '1');
         if (!fullAccess && ((sprite.isRow && sprite.num !== 2) || (sprite.isCol && sprite.num !== 2))) {
-            const msg = this.scene.add.text(0, 330, "Kilidi açmak için 'Tüm Oyunu Aç' bas", { fontFamily:'ARCO', fontSize:26, color:'#ffffff' }).setOrigin(0.5);
+            const msg = this.scene.add.text(0, 330, "Please unlock the game", { fontFamily:'ARCO', fontSize:26, color:'#ffffff' }).setOrigin(0.5);
             this.add(msg);
             this.scene.tweens.add({ targets: msg, alpha:{from:1,to:0}, y: msg.y - 15, duration: 1300, onComplete: ()=> msg.destroy() });
             this.scene.tweens.add({ targets: sprite, angle:{from:0,to:10}, yoyo:true, repeat:1, duration:60 });
