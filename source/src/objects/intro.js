@@ -78,7 +78,6 @@ export class Intro extends Phaser.GameObjects.Container {
                 if (res && res.rewarded) {
                     try {
                         sessionStorage.setItem('mm_full_access_session', '1');
-                        localStorage.setItem('mm_full_access', '1');
                     } catch (e) {}
                     // Visual feedback
                     this.scene.tweens.add({

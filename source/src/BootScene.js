@@ -35,14 +35,18 @@ export default class BootScene extends Phaser.Scene {
             // ignore storage errors
         }
 
-        // Gameplay state defaultları (kalıcı full access'i SİLME)
+        // Uygulama tam kapatılıp açıldığında unlock ve grid ayarlarını sıfırla
         try {
-            // Sadece session erişimi sıfırla
+            // Unlock oturum ve kalıcı bayrakları temizle
             try { sessionStorage.removeItem('mm_full_access_session'); } catch(e) {}
-            // Varsayılan değerleri sadece yoksa ata
-            if (!localStorage.getItem('mm_rows')) localStorage.setItem('mm_rows','2');
-            if (!localStorage.getItem('mm_cols')) localStorage.setItem('mm_cols','2');
-            if (!localStorage.getItem('mm_full_access')) localStorage.setItem('mm_full_access','0');
+            try { localStorage.removeItem('mm_full_access'); } catch(e) {}
+            // Grid’i varsayılan 2x2’ye zorla
+            localStorage.setItem('mm_rows','2');
+            localStorage.setItem('mm_cols','2');
+            // Diğer opsiyonel ayarları sıfırla (kart önizleme/karıştırma)
+            localStorage.removeItem('mm_card_shown');
+            localStorage.removeItem('mm_card_shuffle');
+            // Sayaç ilk değerlerini kur (varsa dokunma ama yoksa 0 yap)
             if (!localStorage.getItem('mm_games_played')) localStorage.setItem('mm_games_played','0');
         } catch(e) { /* noop */ }
 
