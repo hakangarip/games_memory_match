@@ -43,6 +43,8 @@
   "dependencies": {
     "@capacitor/cli": "^7.4.3",
     "@capacitor/core": "^7.4.3",
+    "@capacitor-community/admob": "^7.0.3",
+    "regenerator-runtime": "^0.14.1",
     "phaser": "^3.50.0",
     "phaser3-rex-plugins": "^1.60.3"
   }

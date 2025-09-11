@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { AdService } from './ads/adService';
 // Dynamically require all animal images at build-time
 const animalsContext = (() => {
     try {
@@ -34,17 +35,15 @@ export default class BootScene extends Phaser.Scene {
             // ignore storage errors
         }
 
-        // Gameplay state reset (her açılışta sıfırla): kalıcı full access ve grid seçimlerini temizle
+        // Gameplay state defaultları (kalıcı full access'i SİLME)
         try {
-            const resetKeys = ['mm_full_access','mm_rows','mm_cols','mm_games_played','mm_card_shown','mm_card_shuffle'];
-            resetKeys.forEach(k=> localStorage.removeItem(k));
-            // Session flags
+            // Sadece session erişimi sıfırla
             try { sessionStorage.removeItem('mm_full_access_session'); } catch(e) {}
-            // Zorunlu başlangıç değerleri
-            localStorage.setItem('mm_rows','2');
-            localStorage.setItem('mm_cols','2');
-            localStorage.setItem('mm_full_access','0');
-            localStorage.setItem('mm_games_played','0');
+            // Varsayılan değerleri sadece yoksa ata
+            if (!localStorage.getItem('mm_rows')) localStorage.setItem('mm_rows','2');
+            if (!localStorage.getItem('mm_cols')) localStorage.setItem('mm_cols','2');
+            if (!localStorage.getItem('mm_full_access')) localStorage.setItem('mm_full_access','0');
+            if (!localStorage.getItem('mm_games_played')) localStorage.setItem('mm_games_played','0');
         } catch(e) { /* noop */ }
 
     this.load.image('bg', 'img/bg.png');
@@ -91,6 +90,8 @@ export default class BootScene extends Phaser.Scene {
             if (this.animalKeys && this.animalKeys.length) {
                 this.registry.set('animalKeys', this.animalKeys);
             }
+            // Try initializing Ad service early (no-op on web)
+            try { AdService.init(); } catch(e) {}
         });
     }
 

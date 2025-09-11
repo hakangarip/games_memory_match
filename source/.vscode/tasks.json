@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Install AdMob plugin",
+			"type": "shell",
+			"command": "npm install",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [
+				"$npm5"
+			],
+			"group": "build"
+		}
+	]
+}
