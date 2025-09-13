@@ -10,7 +10,8 @@
     "cap:add:android": "npx cap add android",
     "cap:open:android": "npx cap open android",
     "cap:assets": "npx @capacitor/assets generate --android",
-    "build:android": "npm run build && npm run cap:assets && npx cap sync android"
+    "build:android": "npm run build && npm run cap:assets && npx cap sync android",
+    "build:android:debug": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/build-android.ps1"
   },
   "repository": {
     "type": "git",

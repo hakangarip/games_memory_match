@@ -94,8 +94,10 @@ export default class BootScene extends Phaser.Scene {
             if (this.animalKeys && this.animalKeys.length) {
                 this.registry.set('animalKeys', this.animalKeys);
             }
-            // Try initializing Ad service early (no-op on web)
-            try { AdService.init(); } catch(e) {}
+            // Try initializing and preloading a rewarded ad early (no-op on web)
+            try {
+                AdService.init().then(() => { try { AdService.preloadRewarded(); } catch (e) {} });
+            } catch(e) {}
         });
     }
 

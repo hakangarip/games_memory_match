@@ -70,8 +70,19 @@ export class Intro extends Phaser.GameObjects.Container {
 
     if (this.fullAccessBtn) {
     this.fullAccessBtn.setInteractive();
+    this._unlockBusy = false;
     this.fullAccessBtn.on("pointerdown", () => {
+            if (this._unlockBusy) return; // ignore rapid double taps
+            this._unlockBusy = true;
             this.scene.sound.add('click1').play();
+            // Give quick visual feedback and disable interaction while loading ad
+            try { this.fullAccessBtn.disableInteractive(); } catch(e) {}
+            this.scene.tweens.add({
+                targets: [this.fullAccessBtn],
+                scale: { from: this.fullAccessBtn.scale, to: this.fullAccessBtn.scale - 0.08 },
+                duration: 80,
+                yoyo: true
+            });
             // Show rewarded ad; unlock only if rewarded
             (async () => {
                 const res = await AdService.showRewarded();
@@ -118,6 +129,7 @@ export class Intro extends Phaser.GameObjects.Container {
                                 onComplete: () => {
                                     this.fullAccessBtn.destroy();
                                     this.fullAccessBtn = null;
+                                    this._unlockBusy = false; // ensure flag reset even if destroyed
                                 }
                             });
                         }
@@ -145,6 +157,9 @@ export class Intro extends Phaser.GameObjects.Container {
                             });
                         }
                     });
+                    // Re-enable button for another try since reward wasn't granted
+                    try { if (this.fullAccessBtn) this.fullAccessBtn.setInteractive(); } catch(e) {}
+                    this._unlockBusy = false;
                 }
             })();
         });
@@ -186,6 +201,7 @@ export class Intro extends Phaser.GameObjects.Container {
         this.enable();
         [this.playBtn, this.menuBtn, this.soundBtn, this.fullAccessBtn].forEach(b=>{
             if (!b) return;
+            if (b === this.fullAccessBtn && this._unlockBusy) return; // don't re-enable while ad is loading/showing
             if (!b.input) b.setInteractive(); else b.input.enabled = true;
         });
         try {
@@ -329,8 +345,10 @@ export class Intro extends Phaser.GameObjects.Container {
                 else if (b && b.input && !b.input.enabled) b.input.enabled = true;
             });
             if (this.fullAccessBtn) {
-                if (!this.fullAccessBtn.input) this.fullAccessBtn.setInteractive();
-                else this.fullAccessBtn.input.enabled = true;
+                if (!this._unlockBusy) {
+                    if (!this.fullAccessBtn.input) this.fullAccessBtn.setInteractive();
+                    else this.fullAccessBtn.input.enabled = true;
+                }
             }
             return;
         }
