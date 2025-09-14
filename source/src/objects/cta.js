@@ -230,17 +230,27 @@ export class CTA extends Phaser.GameObjects.Container {
                     localStorage.setItem('mm_games_played', String(n));
                 } catch(e) {}
 
-                // If user has no full access and already played one game, enforce 2x2 next session
+                // Determine next grid based on unlock state
                 try {
-                    const full = localStorage.getItem('mm_full_access') === '1';
-                    const played = parseInt(localStorage.getItem('mm_games_played')||'0');
-                    if (!full && played >= 1) {
+                    const full = (localStorage.getItem('mm_full_access') === '1') || (sessionStorage.getItem('mm_full_access_session') === '1');
+                    if (!full) {
+                        // Locked: always 2x2
                         localStorage.setItem('mm_rows','2');
                         localStorage.setItem('mm_cols','2');
+                    } else {
+                        // Unlocked: step through an even-card progression up to 6x6
+                        const seq = [ [2,2], [2,3], [2,4], [3,4], [4,4], [4,5], [5,6], [6,6] ];
+                        const cur = [this.scene.gamePlay.rows, this.scene.gamePlay.cols];
+                        let idx = seq.findIndex(p => p[0] === cur[0] && p[1] === cur[1]);
+                        if (idx < 0) idx = 0; else if (idx < seq.length - 1) idx += 1;
+                        const [nr, nc] = seq[idx];
+                        localStorage.setItem('mm_rows', String(nr));
+                        localStorage.setItem('mm_cols', String(nc));
                     }
                 } catch(e) {}
 
-                this.scene.retry()
+                // Restart and auto-start next round without returning to main screen
+                this.scene.retry(true)
                 this.hide()
             }
         })

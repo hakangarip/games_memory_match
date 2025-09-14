@@ -4,14 +4,14 @@
 
 export const AdConfig = {
   // Production App ID for Android
-  androidAppId: 'ca-app-pub-0701930116218917~6163254830',
+  androidAppId: 'ca-app-pub-1015545994003652~3645327737',
   // androidAppId (test): 'ca-app-pub-3940256099942544~3347511713'
   // Your production App ID (keep commented or unused until release)
   // prodAndroidAppId: 'ca-app-pub-0701930116218917~6163254830',
 
   // Rewarded Ad Unit IDs
   // Rewarded Ad Unit ID (production)
-  rewardedId: 'ca-app-pub-0701930116218917/1805879873',
+  rewardedId: 'ca-app-pub-1015545994003652/2332246064',
   // rewardedId (test): 'ca-app-pub-3940256099942544/5224354917',
   // Which rewarded format to use: 'rewarded' or 'rewarded_interstitial'
   adType: 'rewarded'

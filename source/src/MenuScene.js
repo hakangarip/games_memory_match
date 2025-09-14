@@ -119,7 +119,7 @@ export default class MenuScene extends Phaser.Scene {
         this.scene.restart()
     }
 
-    retry() {
+    retry(autoStartNext = false) {
         if (this.gamePlay) this.gamePlay.destroy();
         this.gamePlay = new GamePlay(this, 0, 0, this);
         this.gamePlayGrp.add(this.gamePlay);
@@ -141,6 +141,14 @@ export default class MenuScene extends Phaser.Scene {
         this.ctaGrp.add(this.cta);
 
         // this.gamePlay.stopHint()
+
+        if (autoStartNext === true) {
+            try { this.intro.hide(); } catch(e) {}
+            this.time.delayedCall(60, () => {
+                try { this.gamePlay.show(); } catch(e) {}
+                try { this.topPanel.show(); } catch(e) {}
+            });
+        }
 
     }
 
