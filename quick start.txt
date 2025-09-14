@@ -19,9 +19,15 @@ npm run cap:open:android
 
 Yalnız web build:
 
+
 npm run build
 npx cap sync android
 $env:JAVA_HOME="C:\Program Files\Android\Android Studio\jbr"; cd d:\siteler\wwwroot\games\memory_match\source\android; .\gradlew.bat assembleDebug
+
+sadece bu ikisi yeter. 
+npm run build:android
+$env:JAVA_HOME="C:\Program Files\Android\Android Studio\jbr"; cd d:\siteler\wwwroot\games\memory_match\source\android; .\gradlew.bat assembleDebug
+
 
 Tek komutla (hepsi birden) çalıştır:
 
@@ -30,3 +36,7 @@ npm run build:android:debug
 
 Alternatif tek tık:
 source\scripts\build-android.cmd
+
+ABB 
+cd D:\siteler\wwwroot\games\memory_match\source
+npm run android:aab
